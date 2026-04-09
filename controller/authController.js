@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import sendEmail from '../services/emailSet.js';
 import jwt from 'jsonwebtoken';
 
+const SECRETKEY=process.env.SECRETKEY
+
 export const RegisterUser=async(req,res)=>{
     try {
         const {name,email,phone,password}=req.body
@@ -56,19 +58,30 @@ export const LoginUser=async(req,res)=>{
             })
         }
         const  ispasswordmatch=await bcrypt.compare(password,userExist.password)
-        if(!ispasswordmatch){}
+        if(!ispasswordmatch){
         return res.status(400).json({
             success:false,
             message:"Invalid password"
-        })
-        const token=jwt.sign({id:userExist._id,name:userExist.name},process.env.SECRETKEY)
+        })}
+        const token=jwt.sign({id:userExist._id,name:userExist.name},SECRETKEY,{expiresIn:'7d'})
+
+        //response.cookie(name,value,{options})
+          res.cookie("mycookie",token,{
+            httpOnly:true,  
+            secure:false,
+            sameSite:'lax',
+            maxAge:7*24*60*60*1000 
+          })
+
+
+
             res.status(200).json({
                 success:true,
                 message:"Login successful",
                 token:token
             })
 
-
+           
     } catch (error) {
         console.log(error)
         res.status(400).json({

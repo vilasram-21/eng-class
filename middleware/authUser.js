@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken"
 const SECRETKEY=process.env.SECRETKEY
 
 
- export const authUser=(req,res,next)=>{
+  const authUser=(req,res,next)=>{
     try {
-        const token=req.header("auth-token")
+        const token=req.cookies.mycookie
         if(!token){
             return res.status(401).json({
                 success:false,
@@ -24,3 +24,4 @@ const SECRETKEY=process.env.SECRETKEY
         })
     }
 }
+export default authUser

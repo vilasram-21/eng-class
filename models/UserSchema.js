@@ -17,10 +17,30 @@ const UserSchema = new mongoose.Schema({
         password:{
         type:String,
         required:true
-        }
+        },
+        profilePicture:{
+        type:String
+        
        },
+       bio:{
+        type:String
+       },
+       followers:[{
+         follower:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+         }
+         }],
+         following:[{
+            followed:{
+         type:mongoose.Schema.Types.ObjectId,
+         ref:'User'
+            }
+
+         }]
+      },
  {timestamps: true})
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 export default User;
